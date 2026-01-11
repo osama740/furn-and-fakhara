@@ -1,0 +1,477 @@
+:root {
+  --green-main: #2ecc71;
+  --green-dark: #27ae60;
+  --black: #111;
+  --white: #fff;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+body {
+  background: var(--white);
+  color: var(--black);
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Header */
+.main-header {
+  text-align: center;
+  padding: 30px 0;
+  border-bottom: 3px solid var(--green-main);
+}
+
+.main-header h1 {
+  color: var(--green-dark);
+  font-size: 38px;
+}
+
+
+
+/* Sub Nav */
+/* Sub Nav */
+.sub-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 25px 0;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+
+  position: sticky;   /* make it sticky */
+  top: 45px;          /* distance from top, adjust if main nav height changes */
+  background: var(--white); /* prevent overlap with content */
+  z-index: 999;       /* stay above other elements */
+  padding: 10px 0;    /* optional: more spacing */
+  border-bottom: 1px solid #eee; /* optional: separate visually */
+
+  /* Smooth transition */
+  transition: transform 0.4s ease, opacity 0.4s ease, background 0.3s ease;
+}
+
+
+/* When visible */
+.sub-nav.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+.sub-nav a {
+  background: var(--black);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s;
+  flex-shrink: 0; /* prevent shrinking on mobile */
+}
+
+.sub-nav a:hover {
+  background: var(--green-main);
+}
+
+/* Sections */
+section {
+  margin: 40px 0;
+}
+
+section h2, section h3 {
+  color: var(--green-dark);
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--green-main);
+  padding-bottom: 8px;
+}
+
+/* Menu Grid */
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.item {
+  background: var(--white);
+  border: 1px solid #e5e5e5;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(46,204,113,0.35);
+}
+
+/* Item Title */
+.item h4 {
+  background: var(--green-main);
+  color: var(--white);
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* Options */
+.options {
+  margin: 10px 0;
+  text-align: right;
+}
+
+.options label {
+  display: block;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+/* Price */
+.price {
+  font-weight: bold;
+  color: var(--green-dark);
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+/* Order Button */
+/* Order Button Dark Green */
+.order-btn {
+  margin-top: auto; /* push button to bottom of item */
+  background: #000000; /* very dark green */
+  color: var(--white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.order-btn:hover {
+  background: #1a3d1a; /* slightly lighter dark green for hover */
+  transform: scale(1.05);
+}
+
+/* Footer */
+.main-footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid var(--green-main);
+  margin-top: 40px;
+}
+
+/* Back To Top */
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--green-main);
+  color: var(--white);
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#backToTop:hover {
+  background: var(--green-dark);
+  transform: scale(1.1);
+}
+
+/* Cart Button */
+#cartButton {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: var(--green-main);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#cartButton:hover {
+  background: var(--green-dark);
+  transform: scale(1.1);
+}
+
+#cartCount {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-items {
+    grid-template-columns: 1fr;
+  }
+
+  .main-nav a {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .item h4 {
+    font-size: 16px;
+  }
+
+  .price {
+    font-size: 15px;
+  }
+
+  .order-btn {
+    padding: 8px 16px;
+  }
+}
+/* Active Sub-Nav Link */
+.sub-nav a.active {
+  background: var(--green-dark);
+  color: var(--white);
+  transform: scale(1.05);
+}
+#cart-panel {
+  position: fixed;
+  right: -350px;
+  top: 80px;
+  width: 320px;
+  max-width: 90%;
+  background: var(--white);
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 10000;
+  transition: right 0.4s ease;
+}
+
+#cart-panel.show {
+  right: 20px;
+}
+
+#cart-panel h3 {
+  margin-bottom: 15px;
+  color: var(--green-dark);
+}
+
+#cart-items {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding-left: 0;
+}
+
+#cart-items li {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#cart-items li span.note {
+  display: block;
+  font-size: 12px;
+  color: #555;
+}
+
+#cart-items li button.remove {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-actions button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  background: var(--green-main);
+  color: white;
+  transition: 0.3s;
+}
+
+.cart-actions button:hover {
+  background: var(--green-dark);
+}
+
+#close-cart {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+}
+/* Popup Overlay */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none; /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  transition: opacity 0.3s ease;
+}
+
+/* Popup Content */
+.popup-content {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.7);
+  transition: transform 0.3s ease;
+}
+
+/* Show popup */
+.popup.show {
+  display: flex;
+}
+.popup.show .popup-content {
+  transform: scale(1);
+}
+
+/* Close button */
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--black);
+}
+
+/* Textarea */
+#order-note {
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-size: 14px;
+}
+
+/* Confirm button */
+#confirm-order {
+  background: var(--green-main);
+  color: var(--white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#confirm-order:hover {
+  background: var(--green-dark);
+  transform: scale(1.05);
+}
+/* Main Nav */
+/* Main Nav */
+.main-nav {
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  padding: 15px 0; /* initial padding */
+  text-align: center;
+  z-index: 1000;
+  border-bottom: 1px solid #eee;
+  transition: padding 0.4s ease, background 0.4s ease, box-shadow 0.4s ease; /* smooth transition */
+}
+
+/* Shrink effect */
+.main-nav.shrink {
+  padding: 8px 0; /* reduced padding when scrolled */
+  background: rgba(255,255,255,0.95); /* optional: slightly transparent */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Nav Links */
+.main-nav a {
+  background: var(--black);
+  color: var(--white);
+  text-decoration: none;
+  padding: 8px 18px;
+  margin: 5px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.main-nav a:hover {
+  background: var(--green-dark);
+  transform: scale(1.08);
+}
+.main-nav a.active {
+  background: var(--green-dark);
+  transform: scale(1.05);
+}
+/* Cart Total Price */
+#cart-total {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #145214; /* very dark green */
+  text-align: right;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
