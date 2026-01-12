@@ -25,16 +25,34 @@ body {
   margin: auto;
 }
 
-/* Header */
+/* Header - Professional Style */
 .main-header {
   text-align: center;
-  padding: 30px 0;
-  border-bottom: 3px solid var(--green-main);
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60); /* gradient أخضر جذاب */
+  border-bottom: 3px solid #145214; /* أخضر داكن جداً */
+  border-radius: 0 0 20px 20px; /* حواف منحنية في الأسفل */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظل خفيف */
+  position: relative;
+  z-index: 100;
 }
 
 .main-header h1 {
-  color: var(--green-dark);
-  font-size: 38px;
+  color: #fff; /* أبيض لإبراز على الخلفية الخضراء */
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.3); /* ظل نص خفيف لاحترافية */
+  margin: 0;
+}
+
+/* Optional: small tagline */
+.main-header p {
+  color: #e0f7e0;
+  font-size: 18px;
+  margin-top: 8px;
+  font-weight: 500;
 }
 
 
