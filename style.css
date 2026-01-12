@@ -154,21 +154,25 @@ section h2, section h3 {
 /* Order Button */
 /* Order Button Dark Green */
 .order-btn {
-  margin-top: auto; /* push button to bottom of item */
-  background: #000000; /* very dark green */
+  margin-top: auto;
+  background: #0f2f1a; /* أخضر غامق */
   color: var(--white);
   border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: 6px 14px;       /* أصغر */
+  border-radius: 16px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;         /* أصغر */
+  width: fit-content;      /* ما تتمدد */
+  align-self: center;      /* بالوسط داخل الكرت */
   transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .order-btn:hover {
-  background: #1a3d1a; /* slightly lighter dark green for hover */
+  background: #1a3d1a;
   transform: scale(1.05);
 }
+
 
 /* Footer */
 .main-footer {
