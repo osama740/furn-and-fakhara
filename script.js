@@ -1,12 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
 
   // ===== ELEMENTS =====
   const cartButton = document.getElementById("cartButton");
   const cartCount = document.getElementById("cartCount");
   const backToTop = document.getElementById("backToTop");
   const subNavLinks = document.querySelectorAll(".sub-nav a");
-  const sections = document.querySelectorAll("section.sub-section");
   const mainNavLinks = document.querySelectorAll(".main-nav a");
+  const sections = document.querySelectorAll("section.sub-section");
 
   const cartPanel = document.getElementById("cart-panel");
   const cartItemsList = document.getElementById("cart-items");
@@ -21,58 +21,50 @@ document.addEventListener("DOMContentLoaded", function() {
 
   let cart = [];
   let currentItem = null;
-  let selectedOption = "";
-  let selectedPrice = 0;
 
-  // ===== OPEN POPUP ONLY WHEN ADDING ITEM =====
+  // ===== OPEN POPUP WHEN CLICK "اطلب" =====
   document.querySelectorAll(".order-btn").forEach(btn => {
-    btn.addEventListener("click", function() {
-      currentItem = this.closest(".item");
+    btn.addEventListener("click", () => {
+      currentItem = btn.closest(".item");
       orderNoteInput.value = "";
-
-      // Get selected radio option if exists
-      const radios = currentItem.querySelectorAll("input[type='radio']");
-      selectedOption = "";
-      selectedPrice = 0;
-      radios.forEach(r => {
-        if(r.checked){
-          selectedOption = r.parentNode.textContent.trim();
-          // Extract price from the label text
-          const match = selectedOption.match(/\d+/g);
-          if(match) selectedPrice = parseInt(match.join(''));
-        }
-      });
-
-      // If no radio selected, fallback to .price span
-      if(selectedPrice === 0){
-        const priceEl = currentItem.querySelector(".price");
-        if(priceEl){
-          const match = priceEl.innerText.match(/\d+/g);
-          if(match) selectedPrice = parseInt(match.join(''));
-        }
-      }
-
       orderPopup.classList.add("show");
     });
   });
 
   // ===== CLOSE POPUP =====
-  closePopup.addEventListener("click", function() {
+  closePopup.addEventListener("click", () => {
     orderPopup.classList.remove("show");
     currentItem = null;
   });
 
   // ===== CONFIRM ADD TO CART =====
-  confirmOrderBtn.addEventListener("click", function() {
-    if(!currentItem) return;
+  confirmOrderBtn.addEventListener("click", () => {
+    if (!currentItem) return;
 
     const itemName = currentItem.querySelector("h4").innerText;
     const note = orderNoteInput.value.trim();
-    const finalName = selectedOption ? `${itemName} (${selectedOption.replace(/\d+/g,'').trim()})` : itemName;
 
-    cart.push({ name: finalName, price: selectedPrice, note: note });
+    // الحصول على السعر والنص المختار
+    let selectedOption = "";
+    let price = 0;
+
+    const radios = currentItem.querySelectorAll("input[type='radio']");
+    if (radios.length) {
+      radios.forEach(r => {
+        if (r.checked) {
+          selectedOption = r.parentNode.textContent.replace(r.parentNode.querySelector(".price").innerText, '').trim();
+          price = parseInt(r.parentNode.querySelector(".price").innerText.replace(/,/g, '').replace(/\s*L\.L/i, ''));
+        }
+      });
+    } else {
+      const priceEl = currentItem.querySelector(".price");
+      if (priceEl) price = parseInt(priceEl.innerText.replace(/,/g, '').replace(/\s*L\.L/i, ''));
+    }
+
+    const finalName = selectedOption ? `${itemName} (${selectedOption})` : itemName;
+
+    cart.push({ name: finalName, price, note });
     updateCart();
-
     orderPopup.classList.remove("show");
     currentItem = null;
   });
@@ -80,19 +72,17 @@ document.addEventListener("DOMContentLoaded", function() {
   // ===== UPDATE CART =====
   function updateCart() {
     cartItemsList.innerHTML = "";
-
     let total = 0;
 
-    cart.forEach((item, index) => {
+    cart.forEach((item, i) => {
       total += item.price || 0;
-
       const li = document.createElement("li");
       li.innerHTML = `
         <div>${item.name}${item.price ? ' - ' + item.price.toLocaleString() + ' L.L' : ''}${item.note ? ' <span class="note">ملاحظة: ' + item.note + '</span>' : ''}</div>
         <button class="remove">×</button>
       `;
       li.querySelector(".remove").addEventListener("click", () => {
-        cart.splice(index, 1);
+        cart.splice(i, 1);
         updateCart();
       });
       cartItemsList.appendChild(li);
@@ -100,103 +90,73 @@ document.addEventListener("DOMContentLoaded", function() {
 
     cartCount.innerText = cart.length;
 
-    // Show total
-    let totalEl = document.getElementById("cart-total");
-    if(!totalEl){
-      totalEl = document.createElement("div");
-      totalEl.id = "cart-total";
-      totalEl.style.marginTop = "10px";
-      totalEl.style.fontWeight = "bold";
-      totalEl.style.color = "#145214"; // very dark green
-      cartItemsList.parentNode.appendChild(totalEl);
-    }
-    totalEl.innerText = "المجموع: " + total.toLocaleString() + " L.L";
+    // تحديث المجموع النهائي
+    const totalEl = document.getElementById("cart-total");
+    if (totalEl) totalEl.innerText = "المجموع: " + total.toLocaleString() + " L.L";
   }
 
-  // ===== SHOW / HIDE CART =====
-  function showCart() { cartPanel.classList.add("show"); }
-  function hideCart() { cartPanel.classList.remove("show"); }
-  cartButton.addEventListener("click", showCart);
-  closeCartBtn.addEventListener("click", hideCart);
-
-  // ===== CLEAR CART =====
-  clearCartBtn.addEventListener("click", function() {
+  // ===== CART PANEL =====
+  cartButton.addEventListener("click", () => cartPanel.classList.add("show"));
+  closeCartBtn.addEventListener("click", () => cartPanel.classList.remove("show"));
+  clearCartBtn.addEventListener("click", () => {
     cart = [];
     updateCart();
-    hideCart();
+    cartPanel.classList.remove("show");
   });
 
   // ===== SEND TO WHATSAPP =====
-  sendWhatsappBtn.addEventListener("click", function() {
-    if(cart.length === 0) return;
-    let text = "🍽️ طلبات من فرن & فخارة:\n";
+  sendWhatsappBtn.addEventListener("click", () => {
+    if (!cart.length) return;
+
+    let text = "طلبات من فرن & فخارة:\n"; // بدون ايموجي
     cart.forEach((item, i) => {
       text += `${i+1}. ${item.name}${item.price ? ' - ' + item.price.toLocaleString() + ' L.L' : ''}`;
-      if(item.note) text += ` (ملاحظة: ${item.note})`;
+      if (item.note) text += ` (ملاحظة: ${item.note})`;
       text += "\n";
     });
-    const phone = "96176484273"; 
-    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
-    window.open(url, "_blank");
+
+    let total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+    text += `المجموع النهائي: ${total.toLocaleString()} L.L`;
+
+    const phone = "96176484273";
+    window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(text), "_blank");
   });
 
   // ===== BACK TO TOP =====
-  backToTop.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-  // ===== SUB-NAV & MAIN NAV HIGHLIGHT =====
+  // ===== HIGHLIGHT NAV =====
   function highlightNav() {
     const scrollY = window.scrollY + 150;
-    let subNavActive = false;
 
+    let subActive = false;
     sections.forEach(sec => {
-      const top = sec.offsetTop;
-      const height = sec.offsetHeight;
-      const id = sec.getAttribute("id");
-
-      if(scrollY >= top && scrollY < top + height) {
+      if (scrollY >= sec.offsetTop && scrollY < sec.offsetTop + sec.offsetHeight) {
         subNavLinks.forEach(link => link.classList.remove("active"));
-        const activeLink = document.querySelector(`.sub-nav a[href="#${id}"]`);
-        if(activeLink) activeLink.classList.add("active");
-        subNavActive = true;
+        const activeLink = document.querySelector(`.sub-nav a[href="#${sec.id}"]`);
+        if (activeLink) activeLink.classList.add("active");
+        subActive = true;
       }
     });
-    if(!subNavActive) subNavLinks.forEach(link => link.classList.remove("active"));
+
+    if (!subActive) subNavLinks.forEach(link => link.classList.remove("active"));
 
     // Main nav
-    const foodSection = document.getElementById("food");
-    const drinksSection = document.getElementById("drinks");
-    const dessertsSection = document.getElementById("desserts");
-
     mainNavLinks.forEach(link => link.classList.remove("active"));
-
-    if(subNavActive) mainNavLinks[0].classList.add("active");
-    else if(scrollY >= drinksSection.offsetTop && scrollY < drinksSection.offsetTop + drinksSection.offsetHeight)
-      mainNavLinks[1].classList.add("active");
-    else if(scrollY >= dessertsSection.offsetTop && scrollY < dessertsSection.offsetTop + dessertsSection.offsetHeight)
-      mainNavLinks[2].classList.add("active");
+    if (subActive) mainNavLinks[0].classList.add("active");
+    else if (scrollY >= document.getElementById("drinks").offsetTop) mainNavLinks[1].classList.add("active");
+    else if (scrollY >= document.getElementById("desserts").offsetTop) mainNavLinks[2].classList.add("active");
   }
 
   window.addEventListener("scroll", highlightNav);
   highlightNav();
 
-  // ===== SMOOTH SCROLL FOR SUB-NAV =====
-  subNavLinks.forEach(link => {
+  // ===== SMOOTH SCROLL =====
+  [...subNavLinks, ...mainNavLinks].forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute("href"));
-      if(target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-
-  // ===== SMOOTH SCROLL FOR MAIN NAV =====
-  mainNavLinks.forEach(link => {
-    link.addEventListener("click", function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute("href");
-      const targetEl = document.querySelector(targetId);
-      if(targetEl) targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
